@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mystyceye Tarot — Delete Data Request</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Mystyceye Tarot — Request to Delete My Data</h1>
+    <p>If you want us to delete your data, fill the form below. When you submit we'll open your email client with a prepared message to <strong>awakemobileapps@gmail.com</strong>. Subject: <em>delete data request</em>.</p>
+
+    <form id="deleteForm" autocomplete="on">
+      <label for="fullName">Full name *</label>
+      <input id="fullName" name="fullName" type="text" required>
+
+      <label for="email">Your email address *</label>
+      <input id="email" name="email" type="email" required>
+
+      <label for="username">Mystyceye account username or ID (if known)</label>
+      <input id="username" name="username" type="text">
+
+      <label for="reason">Reason / Additional details</label>
+      <textarea id="reason" name="reason" rows="5" placeholder="Optional details to help identify your account"></textarea>
+
+      <label class="checkbox">
+        <input id="confirm" name="confirm" type="checkbox" required>
+        I confirm I am the account owner and request deletion of my data.
+      </label>
+
+      <div class="actions">
+        <button type="submit">Send delete data request</button>
+        <a id="mailtoFallback" class="fallback" href="#" hidden>Open email client manually</a>
+      </div>
+
+      <p class="note">Note: This page opens your email client with the message ready. If your browser doesn't open an email client, use the fallback link or send email manually to <a href="mailto:awakemobileapps@gmail.com?subject=delete%20data%20request">awakemobileapps@gmail.com</a>.</p>
+
+      <div id="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('deleteForm');
+      const status = document.getElementById('status');
+      const fallback = document.getElementById('mailtoFallback');
+      const recipient = 'awakemobileapps@gmail.com';
+      const subject = 'delete data request';
+
+      function buildBody(fields) {
+        const lines = [
+          'Delete data request for Mystyceye Tarot',
+          '',
+          'Full name: ' + (fields.fullName || ''),
+          'Email: ' + (fields.email || ''),
+          'Username/ID: ' + (fields.username || ''),
+          '',
+          'Reason / Details:',
+          (fields.reason || ''),
+          '',
+          'I confirm I am the account owner and request deletion of my data.',
+        ];
+        return lines.join('\\n');
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        status.textContent = '';
+
+        const data = {
+          fullName: form.fullName.value.trim(),
+          email: form.email.value.trim(),
+          username: form.username.value.trim(),
+          reason: form.reason.value.trim()
+        };
+
+        if (!data.fullName || !data.email || !form.confirm.checked) {
+          status.textContent = 'Please fill required fields and confirm ownership.';
+          return;
+        }
+
+        const body = buildBody(data);
+        // Build mailto URL (body must be URL-encoded)
+        const mailto = 'mailto:' + encodeURIComponent(recipient)
+          + '?subject=' + encodeURIComponent(subject)
+          + '&body=' + encodeURIComponent(body);
+
+        // Provide fallback link in case automatic opening is blocked
+        fallback.href = mailto;
+        fallback.hidden = false;
+
+        // Try to open the user's email client
+        try {
+          window.location.href = mailto;
+          status.textContent = 'Opening your email client... If nothing happens, click the fallback link below or send an email manually to ' + recipient + '.';
+        } catch (err) {
+          status.textContent = 'Unable to open email client. Use the fallback link below or send an email manually to ' + recipient + '.';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+```
+
+```css name=styles.css
+/* Simple, lightweight styling for the delete request page */
+:root{
+  --bg:#f7fbff;
+  --card:#ffffff;
+  --accent:#6b46c1;
+  --text:#0f172a;
+  --muted:#475569;
+  --maxw:680px;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  background:linear-gradient(180deg,var(--bg),#ffffff);
+  color:var(--text);
+  margin:0;
+  padding:40px 20px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+}
+
+.container{
+  width:100%;
+  max-width:var(--maxw);
+  background:var(--card);
+  border-radius:10px;
+  box-shadow:0 6px 20px rgba(15,23,42,0.08);
+  padding:28px;
+}
+
+h1{margin:0 0 8px;font-size:1.4rem}
+p{color:var(--muted);margin-top:0}
+
+form{margin-top:16px;display:grid;gap:12px}
+label{font-weight:600;font-size:0.9rem;color:var(--text)}
+input[type="text"],input[type="email"],textarea{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #e6eef8;
+  border-radius:8px;
+  background:#fbfdff;
+  font-size:0.95rem;
+  color:var(--text);
+}
+textarea{resize:vertical}
+
+.checkbox{display:flex;gap:10px;align-items:center;font-weight:500}
+.actions{display:flex;gap:12px;align-items:center;margin-top:6px}
+button{
+  background:var(--accent);
+  color:white;
+  border:none;
+  padding:10px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+button:hover{opacity:0.95}
+.fallback{color:var(--accent);text-decoration:underline;font-weight:600}
+.note{font-size:0.9rem;color:var(--muted)}
+#status{margin-top:6px;color:#0b5; font-weight:600}
+@media (max-width:520px){
+  body{padding:20px}
+  .container{padding:18px}
+}
+```
+
+````markdown name=README.md
+# Mystyceye Tarot — Delete Data Request Page
+
+This repository contains a minimal static page to let users request deletion of their Mystyceye Tarot data. Submitting the form opens the user's email client with a prefilled message addressed to:
+
+awakemobileapps@gmail.com
+
+Subject: `delete data request`
+
+## Files
+
+- `index.html` — The page and form. On submit it builds a `mailto:` link that opens the user's email client.
+- `styles.css` — Styling for the page.
+
+## How to deploy on GitHub Pages
+
+1. Create a new GitHub repository (for example `mystyceye-tarot-delete-request`) under the AwakeMobileApps account (or your account).
+2. Add `index.html` and `styles.css` to the repository on the `main` branch.
+3. Go to the repository Settings -> Pages.
+4. Under "Build and deployment" choose "Branch: main" and "Folder: / (root)" then click Save.
+5. After a moment GitHub Pages will publish the site. The URL will be:
+   - `https://<your-github-username>.github.io/<repo>/`
+
+If you want the site at `https://awakemobileapps.github.io/` make the repository named `awakemobileapps.github.io` and put the files on the `main` branch root.
+
+## Behavior and notes
+
+- This page uses the `mailto:` protocol to open the user's email client with:
+  - To: `awakemobileapps@gmail.com`
+  - Subject: `delete data request`
+  - Body: filled with the form fields (name, email, username/ID, reason).
+- Because this uses `mailto:`, the user's email client or browser must support opening `mailto:` links. There is a fallback link shown on the page if automatic opening is blocked.
+- If you require server-side processing (for example, automatically receiving requests without relying on users' email clients, adding logging, or verifying identity), you'll need a backend or a form service (Formspree, Netlify Forms, etc.). This repository intentionally provides a purely client-side solution.
+
+## Security & privacy
+
+- The form only constructs an email and does not transmit data to any server automatically.
+- Do not include sensitive information that should not be sent via email.
+- Consider adding additional verification steps if you need to confirm requestor identity before deleting data.
+
+If you'd like, I can:
+- Add server-backed options (Formspree/Netlify) so the request is submitted automatically instead of using mailto:.
+- Provide a version that signs requests or includes additional verification steps.
+- Create the repository and push these files for you (I'll need repo name and whether to create it under your AwakeMobileApps account).
