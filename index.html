@@ -5,6 +5,163 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mystyceye Tarot — Delete Data Request</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --accent: #6b46c1;
+      --accent-hover: #5936a2;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --success: #16a34a;
+      --error: #dc2626;
+      --shadow: rgba(0,0,0,0.08);
+      --maxw: 700px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      min-height: 100vh;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--maxw);
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 12px 40px var(--shadow);
+      padding: 36px 32px;
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover { transform: translateY(-4px); }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: var(--text);
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    p.intro {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    form.animated-form {
+      display: grid;
+      gap: 18px;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 8px; }
+
+    label { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+
+    input[type="text"], input[type="email"], textarea {
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      background: #f9fafb;
+      color: var(--text);
+      transition: border 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(107,70,193,0.15);
+      outline: none;
+      transform: scale(1.02);
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 25px var(--shadow);
+    }
+
+    .fallback {
+      color: var(--accent);
+      text-decoration: underline;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .note { font-size: 0.9rem; color: var(--muted); }
+
+    .status {
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--success);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .status.show { opacity: 1; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 520px) {
+      body { padding: 20px; }
+      .container { padding: 28px 20px; }
+      .actions { flex-direction: column; align-items: stretch; }
+      .btn, .fallback { width: 100%; text-align: center; }
+    }
+  </style>
 </head>
 <body>
   <main class="container">
@@ -14,7 +171,7 @@
       Fill out the form below to request deletion of your data. When you submit, your email client will open with a prepared message to <strong>awakemobileapps@gmail.com</strong> (subject: <em>delete data request</em>).
     </p>
 
-    <form id="deleteForm" autocomplete="on">
+    <form id="deleteForm" autocomplete="on" class="animated-form">
       <div class="field">
         <label for="fullName">Full name *</label>
         <input id="fullName" name="fullName" type="text" required>
@@ -41,7 +198,7 @@
       </div>
 
       <div class="actions">
-        <button type="submit">Send Delete Request</button>
+        <button type="submit" class="btn">Send Delete Request</button>
         <a id="mailtoFallback" class="fallback" href="#" style="display:none;">Open email client manually</a>
       </div>
 
@@ -50,7 +207,7 @@
         <a href="mailto:awakemobileapps@gmail.com?subject=delete%20data%20request">awakemobileapps@gmail.com</a>.
       </p>
 
-      <div id="status" aria-live="polite"></div>
+      <div id="status" aria-live="polite" class="status"></div>
     </form>
   </main>
 
@@ -61,6 +218,12 @@
       const fallback = document.getElementById('mailtoFallback');
       const recipient = 'awakemobileapps@gmail.com';
       const subject = 'delete data request';
+
+      const showStatus = (message) => {
+        status.textContent = message;
+        status.classList.add('show');
+        setTimeout(() => status.classList.remove('show'), 5000);
+      };
 
       function buildBody(fields) {
         return [
@@ -79,7 +242,6 @@
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        status.textContent = '';
 
         const data = {
           fullName: form.fullName.value.trim(),
@@ -89,7 +251,7 @@
         };
 
         if (!data.fullName || !data.email || !form.confirm.checked) {
-          status.textContent = 'Please fill required fields and confirm ownership.';
+          showStatus('Please fill required fields and confirm ownership.');
           return;
         }
 
@@ -103,9 +265,9 @@
 
         try {
           window.location.href = mailto;
-          status.textContent = 'Opening your email client... If nothing happens, click the fallback link above.';
+          showStatus('Opening your email client... If nothing happens, click the fallback link above.');
         } catch {
-          status.textContent = 'Unable to open email client. Use the fallback link above.';
+          showStatus('Unable to open email client. Use the fallback link above.');
         }
       });
     })();
