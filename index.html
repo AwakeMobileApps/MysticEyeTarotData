@@ -8,21 +8,32 @@
 </head>
 <body>
   <main class="container">
-    <h1>Mystyceye Tarot — Request to Delete My Data</h1>
-    <p>If you want us to delete your data, fill the form below. When you submit, we'll open your email client with a prepared message to <strong>awakemobileapps@gmail.com</strong>. Subject: <em>delete data request</em>.</p>
+    <h1>Mystyceye Tarot</h1>
+    <h2>Request to Delete My Data</h2>
+    <p class="intro">
+      Fill out the form below to request deletion of your data. When you submit, your email client will open with a prepared message to <strong>awakemobileapps@gmail.com</strong> (subject: <em>delete data request</em>).
+    </p>
 
     <form id="deleteForm" autocomplete="on">
-      <label for="fullName">Full name *</label>
-      <input id="fullName" name="fullName" type="text" required>
+      <div class="field">
+        <label for="fullName">Full name *</label>
+        <input id="fullName" name="fullName" type="text" required>
+      </div>
 
-      <label for="email">Your email address *</label>
-      <input id="email" name="email" type="email" required>
+      <div class="field">
+        <label for="email">Your email address *</label>
+        <input id="email" name="email" type="email" required>
+      </div>
 
-      <label for="username">Mystyceye account username or ID (if known)</label>
-      <input id="username" name="username" type="text">
+      <div class="field">
+        <label for="username">Mystyceye account username or ID</label>
+        <input id="username" name="username" type="text">
+      </div>
 
-      <label for="reason">Reason / Additional details</label>
-      <textarea id="reason" name="reason" rows="5" placeholder="Optional details to help identify your account"></textarea>
+      <div class="field">
+        <label for="reason">Reason / Additional details</label>
+        <textarea id="reason" name="reason" rows="5" placeholder="Optional details to help identify your account"></textarea>
+      </div>
 
       <div class="checkbox">
         <input id="confirm" name="confirm" type="checkbox" required>
@@ -30,11 +41,14 @@
       </div>
 
       <div class="actions">
-        <button type="submit">Send delete data request</button>
+        <button type="submit">Send Delete Request</button>
         <a id="mailtoFallback" class="fallback" href="#" style="display:none;">Open email client manually</a>
       </div>
 
-      <p class="note">Note: This page opens your email client with the message ready. If your browser doesn't open an email client, use the fallback link or send email manually to <a href="mailto:awakemobileapps@gmail.com?subject=delete%20data%20request">awakemobileapps@gmail.com</a>.</p>
+      <p class="note">
+        Note: If your email client doesn’t open automatically, click the fallback link above or send an email manually to 
+        <a href="mailto:awakemobileapps@gmail.com?subject=delete%20data%20request">awakemobileapps@gmail.com</a>.
+      </p>
 
       <div id="status" aria-live="polite"></div>
     </form>
@@ -49,7 +63,7 @@
       const subject = 'delete data request';
 
       function buildBody(fields) {
-        const lines = [
+        return [
           'Delete data request for Mystyceye Tarot',
           '',
           'Full name: ' + (fields.fullName || ''),
@@ -59,9 +73,8 @@
           'Reason / Details:',
           (fields.reason || ''),
           '',
-          'I confirm I am the account owner and request deletion of my data.',
-        ];
-        return lines.join('\n'); // <-- Fixed
+          'I confirm I am the account owner and request deletion of my data.'
+        ].join('\n');
       }
 
       form.addEventListener('submit', function (e) {
@@ -86,13 +99,13 @@
           + '&body=' + encodeURIComponent(body);
 
         fallback.href = mailto;
-        fallback.style.display = 'inline'; // <-- Fixed for cross-browser
+        fallback.style.display = 'inline';
 
         try {
           window.location.href = mailto;
-          status.textContent = 'Opening your email client... If nothing happens, click the fallback link below or send an email manually to ' + recipient + '.';
-        } catch (err) {
-          status.textContent = 'Unable to open email client. Use the fallback link below or send an email manually to ' + recipient + '.';
+          status.textContent = 'Opening your email client... If nothing happens, click the fallback link above.';
+        } catch {
+          status.textContent = 'Unable to open email client. Use the fallback link above.';
         }
       });
     })();
