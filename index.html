@@ -9,7 +9,7 @@
 <body>
   <main class="container">
     <h1>Mystyceye Tarot — Request to Delete My Data</h1>
-    <p>If you want us to delete your data, fill the form below. When you submit we'll open your email client with a prepared message to <strong>awakemobileapps@gmail.com</strong>. Subject: <em>delete data request</em>.</p>
+    <p>If you want us to delete your data, fill the form below. When you submit, we'll open your email client with a prepared message to <strong>awakemobileapps@gmail.com</strong>. Subject: <em>delete data request</em>.</p>
 
     <form id="deleteForm" autocomplete="on">
       <label for="fullName">Full name *</label>
@@ -24,14 +24,14 @@
       <label for="reason">Reason / Additional details</label>
       <textarea id="reason" name="reason" rows="5" placeholder="Optional details to help identify your account"></textarea>
 
-      <label class="checkbox">
+      <div class="checkbox">
         <input id="confirm" name="confirm" type="checkbox" required>
-        I confirm I am the account owner and request deletion of my data.
-      </label>
+        <label for="confirm">I confirm I am the account owner and request deletion of my data.</label>
+      </div>
 
       <div class="actions">
         <button type="submit">Send delete data request</button>
-        <a id="mailtoFallback" class="fallback" href="#" hidden>Open email client manually</a>
+        <a id="mailtoFallback" class="fallback" href="#" style="display:none;">Open email client manually</a>
       </div>
 
       <p class="note">Note: This page opens your email client with the message ready. If your browser doesn't open an email client, use the fallback link or send email manually to <a href="mailto:awakemobileapps@gmail.com?subject=delete%20data%20request">awakemobileapps@gmail.com</a>.</p>
@@ -61,7 +61,7 @@
           '',
           'I confirm I am the account owner and request deletion of my data.',
         ];
-        return lines.join('\\n');
+        return lines.join('\n'); // <-- Fixed
       }
 
       form.addEventListener('submit', function (e) {
@@ -81,16 +81,13 @@
         }
 
         const body = buildBody(data);
-        // Build mailto URL (body must be URL-encoded)
         const mailto = 'mailto:' + encodeURIComponent(recipient)
           + '?subject=' + encodeURIComponent(subject)
           + '&body=' + encodeURIComponent(body);
 
-        // Provide fallback link in case automatic opening is blocked
         fallback.href = mailto;
-        fallback.hidden = false;
+        fallback.style.display = 'inline'; // <-- Fixed for cross-browser
 
-        // Try to open the user's email client
         try {
           window.location.href = mailto;
           status.textContent = 'Opening your email client... If nothing happens, click the fallback link below or send an email manually to ' + recipient + '.';
@@ -102,73 +99,3 @@
   </script>
 </body>
 </html>
-```
-
-```css name=styles.css
-/* Simple, lightweight styling for the delete request page */
-:root{
-  --bg:#f7fbff;
-  --card:#ffffff;
-  --accent:#6b46c1;
-  --text:#0f172a;
-  --muted:#475569;
-  --maxw:680px;
-}
-
-*{box-sizing:border-box}
-body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-  background:linear-gradient(180deg,var(--bg),#ffffff);
-  color:var(--text);
-  margin:0;
-  padding:40px 20px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  min-height:100vh;
-}
-
-.container{
-  width:100%;
-  max-width:var(--maxw);
-  background:var(--card);
-  border-radius:10px;
-  box-shadow:0 6px 20px rgba(15,23,42,0.08);
-  padding:28px;
-}
-
-h1{margin:0 0 8px;font-size:1.4rem}
-p{color:var(--muted);margin-top:0}
-
-form{margin-top:16px;display:grid;gap:12px}
-label{font-weight:600;font-size:0.9rem;color:var(--text)}
-input[type="text"],input[type="email"],textarea{
-  width:100%;
-  padding:10px 12px;
-  border:1px solid #e6eef8;
-  border-radius:8px;
-  background:#fbfdff;
-  font-size:0.95rem;
-  color:var(--text);
-}
-textarea{resize:vertical}
-
-.checkbox{display:flex;gap:10px;align-items:center;font-weight:500}
-.actions{display:flex;gap:12px;align-items:center;margin-top:6px}
-button{
-  background:var(--accent);
-  color:white;
-  border:none;
-  padding:10px 14px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-}
-button:hover{opacity:0.95}
-.fallback{color:var(--accent);text-decoration:underline;font-weight:600}
-.note{font-size:0.9rem;color:var(--muted)}
-#status{margin-top:6px;color:#0b5; font-weight:600}
-@media (max-width:520px){
-  body{padding:20px}
-  .container{padding:18px}
-}
